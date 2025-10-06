@@ -1,0 +1,311 @@
+{
+  "name": "EI with Rubik Pi 3",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "c7cd84d7-cc47-49d8-b476-257183616a14",
+      "name": "Webhook",
+      "webhookId": ""
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": "anomaly",
+          "cachedResultUrl": ""
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "x": "={{ $json.body.x }}",
+            "value": "={{ $json.body.confidence }}",
+            "y": "={{ $json.body.y }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "x",
+              "displayName": "x",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "y",
+              "displayName": "y",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "value",
+              "displayName": "value",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "c5b9de8b-9a11-4568-a5e3-548671e816b8",
+      "name": "Insert row"
+    },
+    {
+      "parameters": {
+        "content": "## Aggregate\nAggregate data produced by the Edge Impulse runner on the RUBIK PI"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -368,
+        -32
+      ],
+      "typeVersion": 1,
+      "id": "25820564-c33b-4bef-b2b6-31a2ffbffaf6",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        224
+      ],
+      "id": "23e98082-ac78-4376-94e4-da0961cfddc3",
+      "name": "Report"
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "",
+          "mode": "list",
+          "cachedResultName": "anomaly",
+          "cachedResultUrl": ""
+        },
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1,
+      "position": [
+        224,
+        224
+      ],
+      "id": "b2b9ccc9-b71d-447d-a1fb-a168ce928463",
+      "name": "Get row(s)"
+    },
+    {
+      "parameters": {
+        "chartType": "line",
+        "labelsMode": "array",
+        "labelsArray": "={{ Array.from({length: $json.value.length}, (_, i) => i) }}",
+        "data": "={{ $json.value }}",
+        "chartOptions": {},
+        "datasetOptions": {
+          "label": "Confidence"
+        }
+      },
+      "type": "n8n-nodes-base.quickChart",
+      "typeVersion": 1,
+      "position": [
+        672,
+        224
+      ],
+      "id": "eeb82873-dcf5-48e6-b5bc-c6472c22953e",
+      "name": "QuickChart"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {},
+            {
+              "fieldToAggregate": "value"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        448,
+        224
+      ],
+      "id": "bed77fee-5e53-468e-89ab-e5f3d8ba2d3a",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "content": "## Email reports\nSend anomaly reports by Gmail"
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -368,
+        208
+      ],
+      "typeVersion": 1,
+      "id": "6ed691d0-f779-485b-87fb-08e5e1184d88",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "sendTo": "recipient@example.com",
+        "subject": "EI Anomaly Chart ready",
+        "message": "=<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <style>\n    body {\n      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;\n      color: #1a1a1a;\n      background-color: #f5f5f5;\n      margin: 0;\n      padding: 0;\n      line-height: 1.6;\n    }\n    .container {\n      max-width: 650px;\n      background-color: #ffffff;\n      margin: 20px auto;\n      border-radius: 10px;\n      box-shadow: 0 4px 12px rgba(0,0,0,0.08);\n      overflow: hidden;\n    }\n    .header {\n      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);\n      color: #ffffff;\n      padding: 30px;\n      text-align: left;\n    }\n    .header h1 {\n      margin: 0;\n      font-size: 26px;\n      font-weight: 600;\n      letter-spacing: -0.5px;\n    }\n    .header p {\n      margin: 8px 0 0 0;\n      opacity: 0.95;\n      font-size: 14px;\n    }\n    .content {\n      padding: 30px;\n      text-align: left;\n    }\n    .info-section {\n      background-color: #f8f9fa;\n      border-left: 4px solid #667eea;\n      padding: 20px;\n      margin: 20px 0;\n      border-radius: 4px;\n    }\n    .info-row {\n      display: table;\n      width: 100%;\n      margin: 10px 0;\n    }\n    .info-label {\n      display: table-cell;\n      font-weight: 600;\n      color: #555;\n      min-width: 140px;\n      padding-right: 15px;\n    }\n    .info-value {\n      display: table-cell;\n      color: #1a1a1a;\n    }\n    .chart-section {\n      margin: 25px 0;\n      padding: 20px;\n      background-color: #fafbfc;\n      border-radius: 6px;\n      border: 1px solid #e1e4e8;\n      text-align: left;\n    }\n    .chart-section h3 {\n      margin: 0 0 12px 0;\n      font-size: 16px;\n      color: #333;\n      font-weight: 600;\n    }\n    .chart-section p {\n      margin: 5px 0;\n      color: #666;\n      font-size: 14px;\n    }\n    .attachment-icon {\n      display: inline-block;\n      background-color: #667eea;\n      color: white;\n      padding: 2px 8px;\n      border-radius: 4px;\n      font-size: 12px;\n      margin-left: 5px;\n      font-weight: 500;\n    }\n    .footer {\n      background-color: #f8f9fa;\n      padding: 20px 30px;\n      text-align: left;\n      font-size: 13px;\n      color: #666;\n      border-top: 1px solid #e9ecef;\n    }\n    .footer strong {\n      color: #333;\n    }\n    .divider {\n      height: 1px;\n      background-color: #e9ecef;\n      margin: 25px 0;\n    }\n    @media only screen and (max-width: 600px) {\n      .container {\n        margin: 10px;\n        border-radius: 6px;\n      }\n      .header, .content, .footer {\n        padding: 20px;\n      }\n      .info-row {\n        display: block;\n      }\n      .info-label {\n        display: block;\n        margin-bottom: 5px;\n      }\n    }\n  </style>\n</head>\n<body>\n  <div class=\"container\">\n    <div class=\"header\">\n      <h1>🔍 Visual Anomaly Report</h1>\n      <p>Automated detection system notification</p>\n    </div>\n    \n    <div class=\"content\">\n      <p>The visual anomaly report is ready:</p>\n      \n      <div class=\"info-section\">\n        <div class=\"info-row\">\n          <div class=\"info-label\">Timestamp:</div>\n          <div class=\"info-value\">{{ $today }}</div>\n        </div>\n        <div class=\"info-row\">\n          <div class=\"info-label\">Hardware:</div>\n          <div class=\"info-value\">RUBIK Pi3</div>\n        </div>\n        <div class=\"info-row\">\n          <div class=\"info-label\">ML Framework:</div>\n          <div class=\"info-value\">Edge Impulse</div>\n        </div>\n      </div>\n\n      <div class=\"divider\"></div>    \n\n  </div>\n</body>\n</html>\n\n",
+        "options": {
+          "appendAttribution": false,
+          "attachmentsUi": {
+            "attachmentsBinary": [
+              {}
+            ]
+          }
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        896,
+        224
+      ],
+      "id": "5de57300-6f9a-4a39-a559-a5cd72746d62",
+      "name": "Send report",
+      "webhookId": "",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "",
+          "name": ""
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Insert row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert row": {
+      "main": [
+        []
+      ]
+    },
+    "Report": {
+      "main": [
+        [
+          {
+            "node": "Get row(s)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s)": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "QuickChart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "QuickChart": {
+      "main": [
+        [
+          {
+            "node": "Send report",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send report": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "962b163a-c8f1-48f9-85fb-dcb17fbb085f",
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": ""
+  },
+  "id": "HyWAnhAT51MyamTW",
+  "tags": [
+    {
+      "name": "Edge Impulse",
+      "id": "HA2QsBD3oeHU6ogd",
+      "createdAt": "2025-10-06T22:36:37.243Z",
+      "updatedAt": "2025-10-06T22:36:37.243Z"
+    },
+    {
+      "name": "RUBIKPI3",
+      "id": "nr9PnpOyLAyvzUhk",
+      "createdAt": "2025-10-06T22:36:42.932Z",
+      "updatedAt": "2025-10-06T22:36:42.932Z"
+    },
+    {
+      "name": "Anomaly",
+      "id": "6GGIajOkdq7nQRUT",
+      "createdAt": "2025-10-06T22:36:50.519Z",
+      "updatedAt": "2025-10-06T22:36:50.519Z"
+    }
+  ]
+}
