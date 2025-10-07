@@ -37,7 +37,6 @@ with open("output.txt", "r") as f:
             print("No detection")
 
         if "height" in line and "anomaly" in line and line not in lines_seen:
-            print("Incorrect posture")
 
             # Find JSON array start
             json_start = line.find("[")
@@ -73,3 +72,4 @@ with open("output.txt", "r") as f:
                     print("JSON decode error:", e)
 
             lines_seen.add(line)
+
