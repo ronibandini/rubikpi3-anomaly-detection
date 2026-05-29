@@ -2,7 +2,6 @@
 
 # RUBIK Pi 3 Anomaly Detection with Edge Impulse and n8n
 
-![RubikPi](https://github.com/ronibandini/rubikpi3-anomaly-detection/blob/main/rubikpi.png)
 
 Visual anomaly detection running on the **RUBIK Pi 3**, powered by **Edge Impulse** and integrated with **n8n** for automated logging, reporting, and workflow orchestration.
 
@@ -193,6 +192,8 @@ Webhook triggered
 Full step-by-step tutorial:
 
 https://docs.edgeimpulse.com/projects/expert-network/anomaly-detection-n8n-rubik-pi
+
+https://www.thundercomm.com/rubik-pi-3/en/docs/anomaly-detection-with-the-rubik-pi-3-and-n8n/
 
 ## Demonstration
 
