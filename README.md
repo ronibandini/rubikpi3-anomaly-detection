@@ -195,12 +195,6 @@ https://docs.edgeimpulse.com/projects/expert-network/anomaly-detection-n8n-rubik
 
 https://www.thundercomm.com/rubik-pi-3/en/docs/anomaly-detection-with-the-rubik-pi-3-and-n8n/
 
-## Demonstration
-
-Video:
-
-https://www.youtube.com/shorts/6sRBoeaxIbk
-
 ## License
 
 GPL-3.0
